@@ -4,33 +4,89 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add to Student Database!</title>
+    <title>Edit Student Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     
     <style>
-        .viewDb {
-            background-color: blue;
+        .viewData {
+            background-color: rgb(27, 27, 75);
             color: white;
-            padding: 10px 20px;
+            padding: 15px 25px;
             border: none;
-            border-radius: 4px;
+            border-radius: 7px;
             cursor: pointer;
             position: fixed;
             top: 20px;
-            right: 20px;
+            left: 20px;
         }
         .error-feedback {
             color: red;
             font-size: 12px;
         }
+        .viewData {
+            background-color: rgb(27, 27, 75);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+        }
+        .error-feedback {
+            color: red;
+            font-size: 12px;
+        }
+        html {
+            height:100%;
+        }
+
+        body {
+        margin:0;
+        }
+        .bg {
+        animation:slide 3s ease-in-out infinite alternate;
+        background-image: linear-gradient(-60deg, rgb(198, 37, 56) 50%, rgb(139, 0, 76) 50%);
+        bottom:0;
+        left:-50%;
+        opacity:.5;
+        position:fixed;
+        right:-50%;
+        top:0;
+        z-index:-1;
+        }
+        .bg2 {
+        animation-direction:alternate-reverse;
+        animation-duration:4s;
+        }
+        .bg3 {
+        animation-duration:5s;
+        }
+        h1 {
+        font-family:monospace;
+        }
+        @keyframes slide {
+        0% {
+            transform:translateX(-25%);
+        }
+        100% {
+            transform:translateX(25%);
+        }
+        }
     </style>
 </head>
 <body>
+    
     <div class="container-fluid">
+        <div class="bg"></div>
+        <div class="bg bg2"></div>
+        <div class="bg bg3"></div>
         <div class="row justify-content-center">
             <div class="col-md-4">
-                <h1 class="text-center mt-5 mb-4">Add Students</h1>
-                <form action="/users/add" method="post" id="studentForm">
+                <h1 class="text-center mt-5 mb-4">Update Students</h1>
+                <form action="@{/users/edit/{id} (id = ${user.id})}" method="get" id="studentForm">
+                    <!-- <form action="/users/edit" method="post" id="studentForm"> -->
                     <div class="mb-3">
                         <input type="text" id="name" name="name" class="form-control form-control-lg" 
                             placeholder="Name" required>
@@ -62,19 +118,18 @@
                     </div>
 
                     <!-- Submit button -->
-                    
                     <div class="d-grid gap-2">
-                        <input class="btn btn-primary" type="submit" value="Add"></input>
+                        <input class="btn btn-primary" type="submit" value="Update"></input>
                     </div>
                     
                 </form>
-                <button class="viewDb" id="viewDb">View Database</button>
+                <button class="viewData" id="viewData">View Database</button>
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById("viewDb").addEventListener("click", function() {
+        document.getElementById("viewData").addEventListener("click", function() {
             window.open("users/view", "_self");
         });
         document.getElementById("studentForm").addEventListener("submit", function(event) {
@@ -86,37 +141,36 @@
             document.getElementById("gpaError").textContent = "";
 
             // Retrieve form inputs
-            const nameInput = document.getElementById("name");
-            const weightInput = document.getElementById("weight");
-            const heightInput = document.getElementById("height");
-            const gpaInput = document.getElementById("gpa");
+            const studentNameInput = document.getElementById("name");
+            const studentWeightInput = document.getElementById("weight");
+            const studentHeightInput = document.getElementById("height");
+            const studentGpaInput = document.getElementById("gpa");
 
-            // Validate inputs
             let isValid = true;
 
-            if (!isNaN(Number(nameInput.value))) {
+            if (!isNaN(Number(studentNameInput.value))) {
                 document.getElementById("nameError").textContent = "Please enter a valid name without numbers.";
                 isValid = false;
             }
 
-            if (isNaN(weightInput.value) || weightInput.value <= 0) {
+            if (isNaN(studentWeightInput.value) || studentWeightInput.value <= 0) {
                 document.getElementById("weightError").textContent = "Please enter a valid weight.";
                 isValid = false;
             }
 
-            if (isNaN(heightInput.value) || heightInput.value <= 0) {
+            if (isNaN(studentHeightInput.value) || studentHeightInput.value <= 0) {
                 document.getElementById("heightError").textContent = "Please enter a valid height.";
                 isValid = false;
             }
 
-            if (isNaN(gpaInput.value) || gpaInput.value < 0 || gpaInput.value > 4.33) {
+            if (isNaN(studentGpaInput.value) || studentGpaInput.value < 0 || studentGpaInput.value > 4.33) {
                 document.getElementById("gpaError").textContent = "Please enter a valid GPA between 0 and 4.";
                 isValid = false;
             }
 
-            // Submit form if all inputs are valid
             if (isValid) {
                 this.submit();
+                  window.open("users/view", "_self");
             }
         });
     </script>

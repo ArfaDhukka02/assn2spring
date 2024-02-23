@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">	
+    <style>
+
+    .rectangle {
+        background-color: rgb(128, 194, 112);
+        border: 1px solid black;
+        box-shadow: inset;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-weight: 600;
+        margin: 10px;
+        border-radius: 8px;
+    }
+    .rectangle span {
+        margin-bottom: 10px;
+    }
+    .addButton {
+        background-color: rgb(27, 27, 75);
+        color: white;
+        padding: 15px 25px;
+        border: none;
+        border-radius: 7px;
+        cursor: pointer;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+    }
+    .deleteButton {
+    background-color: rgb(156, 0, 0);
+    color: rgba(255, 255, 255, 0.888);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    justify-content:center;
+    align-items:center;
+    margin-top: 12px;
+}
+
+.editButton {
+    background-color: rgb(0, 76, 0);
+    color: rgba(255, 255, 255, 0.888);
+    border: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    margin-top: 12px;
+}
+html {
+  height:100%;
+}
+
+body {
+  margin:0;
+}
+.bg {
+  animation:slide 3s ease-in-out infinite alternate;
+  background-image: linear-gradient(-60deg, rgb(198, 37, 56) 50%, rgb(139, 0, 76) 50%);
+  bottom:0;
+  left:-50%;
+  opacity:.5;
+  position:fixed;
+  right:-50%;
+  top:0;
+  z-index:-1;
+}
+.background2 {
+  animation-direction:alternate-reverse;
+  animation-duration:4s;
+}
+.background3 {
+  animation-duration:5s;
+}
+h1 {
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin: 0 auto;
+    text-align: center;
+}
+p{
+    color: rgb(41, 39, 39);
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size:x-large;
+    margin: 0 auto;
+    text-align: center;
+    padding-bottom: 17px;
+}
+@keyframes slide {
+  0% {
+    transform:translateX(-25%);
+  }
+  100% {
+    transform:translateX(25%);
+  }
+}
+</style>
+     <title>Button Example</title>
+</head>
+<body>
+    <main class="container-fluid">
+        <div class="bg"></div>
+        <div class="bg background2"></div>
+        <div class="bg background3"></div>
+        <h1>Students</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <p>
+                    Height of the rectangle represents the student's height
+                    and the width represents the student's weight. Color of the name is the hair color.
+                </p>
+                <div th:each="user: ${us}">
+                    <div class="rectangle" th:style="'width:' + ((${user.weight} + 10)*5) + 'px; height:' + (${user.height} ) + 'px;'">
+                        <span th:text="${user.name}" th:style="'color: ' + ${user.color}"></span>
+                    
+                       
+                        <button class="editButton" th:attr="data-user-id=${userId}">Edit</button>
+                        <!-- <button class="editButton"">Edit</button> -->
+                        <button class="deleteButton"  th:data-value="${user.uid}">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<button class="addButton" id="addButton">Add a user</button>
+
+<script>
+    document.getElementById("addButton").addEventListener("click", function() {
+    window.open("../add.html", "_self");
+    });
+
+    
+
+    document.querySelectorAll('.editButton').forEach(button => {
+    button.addEventListener('click', function() {
+        const userId = this.getAttribute('data-user-id');
+        window.open("../edit.html", "_self"); 
+        
+        });
+    });
+
+
+
+    const deleteButtons = document.getElementsByClassName("deleteButton");
+    for (let i = 0; i < deleteButtons.length; i++) {
+        deleteButtons[i].addEventListener("click", function(event) {
+            console.log(event.target);
+        const id = event.target.getAttribute('data-value');
+        console.log(id);
+        const confirmation = confirm('Are you sure you want to delete this user?');
+        if (confirmation) {
+            fetch('/users/delete/' + id, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('User deleted successfully');
+            location.reload();
+        } else {
+            console.error('Error deleting user');
+        }
+    })
+    .catch(error => {
+        console.error('Request failed:', error);
+    });
+        }
+    });
+}
+
+
+
+</script>
+
+</body>
+</html>
